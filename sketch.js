@@ -58,7 +58,7 @@ function setup() {
 	world.add(mountainContainer);
 	world.add(cloudContainer);
 	//adding 3d model for cloud1
-	
+
 }
 
 function draw() {
@@ -164,21 +164,25 @@ function setTrees(container, bird) {
 }
 
 function setPyramid(){
-	// var tetrahedron1= new Tetrahedron({
-	// 	x:3, y:2, z: 10,
-	// 	radius: 3,
-	// 	red:255, green:0, blue:0,
-	// 	rotationY:-90,
-	// 	rotationX:-90,
-	var base = new Plane({
-		x: 0, y:0, z:0,
-		width: 4, height:4,
-		rotationX:90,
-		side: 'double',
-		red:random(255), green:random(255), blue:random(255),
+	pyramid = new OBJ({
+		asset: 'pyramid_obj',
+		mtl: 'pyramid_mtl',
+		x: 3,
+		y: 0,
+		z: -10,
+		scaleX:10, scaleY:10, scaleZ:10,
+		rotationX:0,
+		rotationY:0
 	});
+	world.add(pyramid);
 
-	world.add(base);
+	// pyramid2 = new GLTF({
+	// 	asset: 'pyramid2',
+	// 	x:0,
+	// 	y:0,
+	// 	z:-5,
+	// });
+	// world.add(pyramid2);
 
 }
 
