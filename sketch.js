@@ -17,11 +17,14 @@ var treeContainer;
 var mountainContainer;
 var cloudContainer;
 
-var changeScene = 0
+var changeScene = 0;
 
 // questions to ask: how to remove from world?
 // how to smartly do collision for each object
 // how to move in y axis
+
+// TODO: progressivly generate scene ahead of the user by 100/150 point and splice the ones behind
+// TODO: prevent the user from go too low or too high
 
 function setup() {
 	// no canvas needed
@@ -29,6 +32,7 @@ function setup() {
 
 	world = new World('VRScene');
 	world.setUserPosition(0, 5, 10);
+	world.setFlying(true);
 	// sphere = new Sphere({x:0, y:2, z:0, red:0, green:255, blue:0});
 	// world.add(sphere);
 	treeContainer = new Container3D({
