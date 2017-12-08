@@ -54,6 +54,7 @@ function setup() {
 	mountainCont2 = new Container3D({x:0,y:0,z:0});
 	mountainCont3 = new Container3D({x:0,y:0,z:0});
 	mountainsContainer = [mountainCont1, mountainCont2, mountainCont3];
+
 	cloudContainer = new Container3D({x:0,y:0,z:0});
 
 	treeCont1 = new Container3D({x:0,y:0,z:0});
@@ -62,6 +63,7 @@ function setup() {
 	treeCont4 = new Container3D({x:0,y:0,z:0});
 	treeCont5 = new Container3D({x:0,y:0,z:0});
 	treesContainer = [treeCont1,treeCont2,treeCont3,treeCont4,treeCont5];
+
 	setGround();
 
 	bird = world.getUserPosition();
@@ -69,7 +71,7 @@ function setup() {
 	nextT.i = 0;
 
 	nextM.z = bird.z - 40;
-	nextT.i = 0;
+	nextM.i = 0;
 
 	setTrees(treeCont1, bird.x, bird.z-10);
 	setTrees(treeCont2, bird.x, bird.z-30);
@@ -115,13 +117,22 @@ function movementCtrl(){
 	circle.setX(bird.x);
 	circle.setZ(bird.z);
 
-	// proceduly generate trees
+	// trees generation
 	if(bird.z < nextT.z){
 		nextT.z = bird.z - 20;
 		setTrees(treesContainer[nextT.i], bird.x, bird.z-110);
 		nextT.i +=1;
 		if(nextT.i === 5){
 			nextT.i = 0;
+		}
+	}
+	// mountains generation
+	if(bird.z < nextM.z){
+		nextM.z = bird.z - 40;
+		setMountains(mountainsContainer[nextM.i], bird.x, bird.z-150);
+		nextM.i +=1;
+		if(nextM.i === 3){
+			nextM.i = 0;
 		}
 	}
 
@@ -157,7 +168,7 @@ function setMountains(container, xPos, zPos){
 		var g= random(255);
 		var b = random(255);
 		var x = random(xPos-50,xPos+50);
-		var z = random(zPos-20, zPos-60);
+		var z = random(zPos-10, zPos-50);
 		var height = random(30, 100);
 		newCone = new Cone({
 			x:x, y:4, z:z,
@@ -251,7 +262,7 @@ function initTrees2(container, bird) {
 		// world.add(trunk);
 		var leaves = new Box({
 			x:xPos, y:5, z:zPos,
-			width:random(3,5) , height: random(,5) , depth:random(3,5),
+			width:random(3,5) , height: random(3,5) , depth:random(3,5),
 			red:30, green:147, blue: 45
 		});
 		// world.add(leaves);
