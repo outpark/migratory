@@ -271,27 +271,43 @@ function initTrees2(container, bird) {
 	}
 }
 
+function setPyramid1(){
+  pyramid1= new OBJ({
+		asset: 'pyramid1_obj',
+		mtl: 'pyramid1_mtl',
+		x: 5,
+		y: 0,
+		z: 5,
+		scaleX:30, scaleY:30, scaleZ:30,
 
-function setPyramid(){
-	pyramid = new OBJ({
-		asset: 'pyramid_obj',
-		mtl: 'pyramid_mtl',
+	});
+
+	world.add(pyramid1);
+}
+	function setPyramid2(){
+	  pyramid2 = new OBJ({
+			asset: 'pyramid2_obj',
+			mtl: 'pyramid2_mtl',
+			x: 5,
+			y: 0,
+			z: -10,
+			scaleX:0.03, scaleY:0.03, scaleZ:0.03,
+
+		});
+		world.add(pyramid2);
+	}
+	function setDesertStone(){
+  desertstone = new OBJ({
+		asset: 'desertstone_obj',
+		mtl: 'desertstone_mtl',
 		x: 3,
 		y: 0,
 		z: -10,
-		scaleX:10, scaleY:10, scaleZ:10,
+		scaleX:1, scaleY:1, scaleZ:1,
 		rotationX:0,
 		rotationY:0
 	});
-	world.add(pyramid);
-
-	// pyramid2 = new GLTF({
-	// 	asset: 'pyramid2',
-	// 	x:0,
-	// 	y:0,
-	// 	z:-5,
-	// });
-	// world.add(pyramid2);
+	world.add(desertstone);
 
 }
 
