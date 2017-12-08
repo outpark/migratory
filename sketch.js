@@ -6,14 +6,13 @@ var circle;
 var bird;
 var cone;
 
-var score;
-var obstacles = [];
-
+var score = 0;
 var cloudCount = 10;
 var moutainCount = 7;
 var treeCount = 20;
 
-var nextZ = {};
+var nextT = {};
+var nextM = {};
 
 var treeContainer;
 var treeCont1;
@@ -21,10 +20,12 @@ var treeCont2;
 var treeCont3;
 var treeCont4;
 var treeCont5;
-var treeCons
+var treesContainer;
 
 var mountainCont1;
 var mountainCont2;
+var mountainCont3;
+var mountainsContainer;
 
 var mountainContainer;
 var cloudContainer;
@@ -49,7 +50,10 @@ function setup() {
 	// sphere = new Sphere({x:0, y:2, z:0, red:0, green:255, blue:0});
 	// world.add(sphere);
 	// treeContainer = new Container3D({x:0,y:0,z:0});
-	mountainContainer = new Container3D({x:0,y:0,z:0});
+	mountainCont1 = new Container3D({x:0,y:0,z:0});
+	mountainCont2 = new Container3D({x:0,y:0,z:0});
+	mountainCont3 = new Container3D({x:0,y:0,z:0});
+	mountainsContainer = [mountainCont1, mountainCont2, mountainCont3];
 	cloudContainer = new Container3D({x:0,y:0,z:0});
 
 	treeCont1 = new Container3D({x:0,y:0,z:0});
@@ -57,12 +61,15 @@ function setup() {
 	treeCont3 = new Container3D({x:0,y:0,z:0});
 	treeCont4 = new Container3D({x:0,y:0,z:0});
 	treeCont5 = new Container3D({x:0,y:0,z:0});
-	treeCons = [treeCont1,treeCont2,treeCont3,treeCont4,treeCont5];
+	treesContainer = [treeCont1,treeCont2,treeCont3,treeCont4,treeCont5];
 	setGround();
 
 	bird = world.getUserPosition();
-	nextZ.z = bird.z - 20;
-	nextZ.i = 0;
+	nextT.z = bird.z - 20;
+	nextT.i = 0;
+
+	nextM.z = bird.z - 40;
+	nextT.i = 0;
 
 	setTrees(treeCont1, bird.x, bird.z-10);
 	setTrees(treeCont2, bird.x, bird.z-30);
@@ -70,20 +77,27 @@ function setup() {
 	setTrees(treeCont4, bird.x, bird.z-70);
 	setTrees(treeCont5, bird.x, bird.z-90);
 
+	setMountains(mountainCont1, bird.x, bird.z-40);
+	setMountains(mountainCont2, bird.x, bird.z-80);
+	setMountains(mountainCont3, bird.x, bird.z-120);
 
-	initMountains(mountainContainer, bird);
+	// initMountains(mountainContainer, bird);
 	// initTrees(treeContainer,bird);
 	setPyramid();
 	initClouds(cloudContainer, bird);
 
 	// world.add(treeContainer);
-	world.add(mountainContainer);
+	// world.add(mountainContainer);
 	world.add(cloudContainer);
-	world.add(treeCont1)
-	world.add(treeCont2)
-	world.add(treeCont3)
-	world.add(treeCont4)
-	world.add(treeCont5)
+	world.add(treeCont1);
+	world.add(treeCont2);
+	world.add(treeCont3);
+	world.add(treeCont4);
+	world.add(treeCont5);
+
+	world.add(mountainCont1);
+	world.add(mountainCont2);
+	world.add(mountainCont3);
 	//adding 3d model for cloud1
 
 }
@@ -94,55 +108,23 @@ function draw() {
 var tCount = 0;
 function movementCtrl(){
 	bird = world.getUserPosition();
-	// if(!bird.y < 2)
-		world.moveUserForward(0.1);
 
-	// if(bird.z < -30){
-	// 	// world.remove(treeContainer);
-	// 	treeContainer.hide();
-	// }
+	world.moveUserForward(0.1);
 
 	bird = world.getUserPosition();
 	circle.setX(bird.x);
 	circle.setZ(bird.z);
-	// console.log(circle.getWorldPosition());
 
-	// console.log(bird.z % 100);
-
-	if(bird.z < nextZ.z){
-		nextZ.z = bird.z - 20;
-		setTrees(treeCons[nextZ.i], bird.x, bird.z-110);
-		nextZ.i +=1;
-		if(nextZ.i === 5){
-			nextZ.i = 0;
+	// proceduly generate trees
+	if(bird.z < nextT.z){
+		nextT.z = bird.z - 20;
+		setTrees(treesContainer[nextT.i], bird.x, bird.z-110);
+		nextT.i +=1;
+		if(nextT.i === 5){
+			nextT.i = 0;
 		}
 	}
 
-	// if(-Math.floor(bird.z % 10) === 0){
-	// 	if(tCount === 0){
-	// 		updateTrees(treeContainer, bird);
-	// 		tCount++;
-	// 	}
-	// }else{
-	// 	tCount = 0;
-	// }
-
-	// if(-Math.floor(bird.z % 50) === 49 && changeScene < 1){
-	// 	// change environment every 100 movement
-	// 	// debugger;
-	// 	emptyContainer(treeContainer);
-	// 	emptyContainer(mountainContainer);
-	// 	emptyContainer(cloudContainer);
-	// 	initTrees(treeContainer, bird);
-	// 	initMountains(mountainContainer, bird);
-	// 	initClouds(cloudContainer, bird);
-	// 	console.log("Changing!!");
-	// 	changeScene++;
-	// }
-
-	// if(-Math.floor(bird.z % 50) === 1){
-	// 	changeScene = 0;
-	// }
 }
 
 function setTrees(container, xPos, zPos){
@@ -166,6 +148,25 @@ function setTrees(container, xPos, zPos){
 		});
 		container.addChild(trunk);
 		container.addChild(leaves);
+	}
+}
+
+function setMountains(container, xPos, zPos){
+	for(let i=0;i<moutainCount;i++){
+		var r= random(255);
+		var g= random(255);
+		var b = random(255);
+		var x = random(xPos-50,xPos+50);
+		var z = random(zPos-20, zPos-60);
+		var height = random(30, 100);
+		newCone = new Cone({
+			x:x, y:4, z:z,
+			red:r, green:g, blue:b,
+			height:height,
+			radiusBottom:random(15,30), radiusTop:0.1,
+		});
+		// world.add(newCone);
+		container.addChild(newCone);
 	}
 }
 
