@@ -172,6 +172,7 @@ function setMountains(container, xPos, zPos){
 
 
 
+
 function initClouds(container, bird) {
 	for(let i=0;i<cloudCount;i++){
 		cloud = new OBJ({
@@ -235,6 +236,30 @@ function initTrees(container, bird) {
 		container.addChild(leaves);
 	}
 }
+
+function initTrees2(container, bird) {
+	for(let i=0;i<treeCount;i++){
+		let xPos = random(-30,30);
+		let zPos = random(bird.z, bird.z-60)
+		let height = random(5, 10);
+		var trunk = new Cylinder({
+		x:xPos, y:1 , z:zPos,
+		height:height,
+		radius: 0.25,
+		red: 83, green: 53, blue:10,
+		});
+		// world.add(trunk);
+		var leaves = new Box({
+			x:xPos, y:5, z:zPos,
+			width:random(3,5) , height: random(,5) , depth:random(3,5),
+			red:30, green:147, blue: 45
+		});
+		// world.add(leaves);
+		container.addChild(trunk);
+		container.addChild(leaves);
+	}
+}
+
 
 function setPyramid(){
 	pyramid = new OBJ({
