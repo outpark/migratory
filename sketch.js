@@ -212,9 +212,9 @@ function initMountains(container, bird) {
 		var b = random(255);
 		var xPos = random(-40,40);
 		var zPos = random(bird.z-20, bird.z-80);
-		var height = random(30, 100);
+		var height = random(30, 80);
 		newCone = new Cone({
-			x:xPos, y:4, z:zPos,
+			x:xPos, y:30, z:zPos,
 			red:r, green:g, blue:b,
 			height:height,
 			radiusBottom:random(15,30), radiusTop:0.1,
