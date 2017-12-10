@@ -256,23 +256,23 @@ function setMountains(container, xPos, zPos, autumn){
 function setClouds(container, xPos, zPos){
   emptyContainer(container);
   for(let i=0;i<cloudCount;i++){
-    var cloudrand=cloudcolors[Math.floor(Math.random()*cloudcolors.length)];
-    var xPos=random(-30,30);
-    var yPos=random(10,30);
-    var zPos=random(bird.z, bird.z-60);
+    var cloudrand=cloudcolors[Math.floor(random(cloudcolors.length))];
+    var x = random(xPos-55,xPos+55);
+    var yPos = random(5,50);
+    var z = random(zPos-10, zPos-60);
     cloud1=new Sphere({
-			x:xPos, y: yPos, z:zPos,
-			radius:4,
+			x:x-2, y: yPos+random(-1,1), z:z,
+			radius:1,
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		cloud2=new Sphere({
-			x:xPos+3, y: yPos, z:zPos,
-			radius:4,
+			x:x, y: yPos, z:z,
+			radius:1.5,
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		cloud3=new Sphere({
-			x:xPos+6, y: yPos, z:zPos,
-			radius: 4,
+			x:x+2, y: yPos+random(-1,1), z:z,
+			radius: 1,
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		container.addChild(cloud1);
