@@ -29,7 +29,7 @@ var leavescolors=[[30,147,45],[58,88,8],[121,161,54],[87,124,24],[70,100,17],[99
 var leavescolors_fall = [[254,186,2],[242,93,60],[205,209,0],[255,238,0],[255,117,38]];
 var mountcolors = [[134,186,139],[158,209,187],[201,228,202],[214,232,153],[247,240,148]];
 var mountcolors_fall = [[73,15,3],[219,44,12],[255,205,25],[247,98,23],[112,70,40]];
-var cloudcolors=[[255,255,255],[239,255,250],[229,236,244]];
+var cloudcolors = [[255,255,255],[239,255,250],[229,236,244]];
 
 var mountainCont1;
 var mountainCont2;
@@ -258,7 +258,7 @@ function setClouds(container, xPos, zPos){
   for(let i=0;i<cloudCount;i++){
     var cloudrand=cloudcolors[Math.floor(random(cloudcolors.length))];
     var x = random(xPos-55,xPos+55);
-    var yPos = random(5,50);
+    var yPos = random(10,50);
     var z = random(zPos-10, zPos-60);
     cloud1=new Sphere({
 			x:x-2, y: yPos+random(-1,1), z:z,
