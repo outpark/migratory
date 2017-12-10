@@ -85,7 +85,8 @@ function setup() {
 
 	// initMountains(mountainContainer, bird);
 	// initTrees(treeContainer,bird);
-	setPyramid();
+	setPyramid1();
+	setPyramid2();
 	initClouds(cloudContainer, bird);
 
 	// world.add(treeContainer);
@@ -145,6 +146,8 @@ function setTrees(container, xPos, zPos){
 		let height1 = random(6, 9);
 		let height2 = random(7, 14);
 		let z = random(zPos, zPos-20);
+		var leavescolors=[[30,147,45],[58,88,8],[121,161,54],[87,124,24],[70,100,17],[99,134,40]];
+		var leavesrand=leavescolors[Math.floor(Math.random()*leavescolors.length)];
 		var trunk = new Cylinder({
 			x:x, y:1 , z:z,
 			height:height1,
@@ -155,7 +158,7 @@ function setTrees(container, xPos, zPos){
 			x:x, y:height1, z:z,
 			height:height2,
 			radiusBottom:2, radiusTop:0.01,
-			red:30, green:147, blue: 45
+			red:leavesrand[0], green:leavesrand[1], blue: leavesrand[2]
 		});
 		container.addChild(trunk);
 		container.addChild(leaves);
@@ -164,15 +167,14 @@ function setTrees(container, xPos, zPos){
 
 function setMountains(container, xPos, zPos){
 	for(let i=0;i<moutainCount;i++){
-		var r= random(255);
-		var g= random(255);
-		var b = random(255);
+		var mountcolors=[[52,62,61],[115,135,123],[131,151,136],[164,178,173],[113,140,148]];
+		var mountrand=mountcolors[Math.floor(Math.random()*mountcolors.length)];
 		var x = random(xPos-50,xPos+50);
 		var z = random(zPos-10, zPos-50);
 		var height = random(30, 100);
 		newCone = new Cone({
 			x:x, y:4, z:z,
-			red:r, green:g, blue:b,
+			red:mountrand[0], green:mountrand[1], blue:mountrand[2],
 			height:height,
 			radiusBottom:random(15,30), radiusTop:0.1,
 		});
