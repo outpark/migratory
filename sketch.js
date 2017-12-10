@@ -29,10 +29,7 @@ var leavescolors=[[30,147,45],[58,88,8],[121,161,54],[87,124,24],[70,100,17],[99
 var leavescolors_fall = [[254,186,2],[242,93,60],[205,209,0],[255,238,0],[255,117,38]];
 var mountcolors = [[134,186,139],[158,209,187],[201,228,202],[214,232,153],[247,240,148]];
 var mountcolors_fall = [[73,15,3],[219,44,12],[255,205,25],[247,98,23],[112,70,40]];
-<<<<<<< HEAD
 var cloudcolors=[[255,255,255],[239,255,250],[229,236,244]];
-=======
->>>>>>> 12394153086ac9741edb640eb429c08a993a6ff2
 
 var mountainCont1;
 var mountainCont2;
@@ -138,7 +135,7 @@ function movementCtrl(){
   if (distance > 0.5) {
     // let the user move!
     // console.log("go");
-    world.moveUserForward(0.5);
+    world.moveUserForward(0.1);
   }
   // world.moveUserForward(0.1);
 
@@ -259,8 +256,10 @@ function setMountains(container, xPos, zPos, autumn){
 function setClouds(container, xPos, zPos){
   emptyContainer(container);
   for(let i=0;i<cloudCount;i++){
-<<<<<<< HEAD
     var cloudrand=cloudcolors[Math.floor(Math.random()*cloudcolors.length)];
+    var xPos=random(-30,30);
+    var yPos=random(10,30);
+    var zPos=random(bird.z, bird.z-60);
     cloud1=new Sphere({
 			x:xPos, y: yPos, z:zPos,
 			radius:4,
@@ -280,19 +279,6 @@ function setClouds(container, xPos, zPos){
 		container.addChild(cloud2);
 		container.addChild(cloud3);
 	}
-=======
-    cloud = new OBJ({
-      asset: 'cloud1_obj',
-      mtl: 'cloud1_mtl',
-      x: random(xPos-55,xPos+55),
-      y: random(8,55),
-      z: random(bird.z,bird.z-100),
-      rotationX:random(3),
-      rotationY:random(3)
-    });
-    container.addChild(cloud);
-  }
->>>>>>> 12394153086ac9741edb640eb429c08a993a6ff2
 }
 
 
@@ -370,56 +356,6 @@ function initMountains(container, bird) {
     container.addChild(newCone);
   }
 }
-<<<<<<< HEAD
-
-function initTrees(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Cone({
-      x:xPos, y:5, z:zPos,
-      height:height,
-      radiusBottom:1, radiusTop:0.01,
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
-
-function initTrees2(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Box({
-      x:xPos, y:5, z:zPos,
-      width:random(3,5) , height: random(3,5) , depth:random(3,5),
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
-=======
-
 function initTrees(container, bird) {
   for(let i=0;i<treeCount;i++){
     let xPos = random(-30,30);
@@ -467,5 +403,49 @@ function initTrees2(container, bird) {
   }
 }
 
+function initTrees(container, bird) {
+  for(let i=0;i<treeCount;i++){
+    let xPos = random(-30,30);
+    let zPos = random(bird.z, bird.z-60)
+    let height = random(5, 10);
+    var trunk = new Cylinder({
+    x:xPos, y:1 , z:zPos,
+    height:height,
+    radius: 0.25,
+    red: 83, green: 53, blue:10,
+    });
+    // world.add(trunk);
+    var leaves = new Cone({
+      x:xPos, y:5, z:zPos,
+      height:height,
+      radiusBottom:1, radiusTop:0.01,
+      red:30, green:147, blue: 45
+    });
+    // world.add(leaves);
+    container.addChild(trunk);
+    container.addChild(leaves);
+  }
+}
 
->>>>>>> 12394153086ac9741edb640eb429c08a993a6ff2
+function initTrees2(container, bird) {
+  for(let i=0;i<treeCount;i++){
+    let xPos = random(-30,30);
+    let zPos = random(bird.z, bird.z-60)
+    let height = random(5, 10);
+    var trunk = new Cylinder({
+    x:xPos, y:1 , z:zPos,
+    height:height,
+    radius: 0.25,
+    red: 83, green: 53, blue:10,
+    });
+    // world.add(trunk);
+    var leaves = new Box({
+      x:xPos, y:5, z:zPos,
+      width:random(3,5) , height: random(3,5) , depth:random(3,5),
+      red:30, green:147, blue: 45
+    });
+    // world.add(leaves);
+    container.addChild(trunk);
+    container.addChild(leaves);
+  }
+}
