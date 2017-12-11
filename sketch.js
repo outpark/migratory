@@ -8,9 +8,15 @@ var sensor;
 var cone;
 
 var score = 0;
+
+var groundR = 150;
+var groundG = 255;
+var groundB = 207;
+
 var cloudCount = 40;
 var moutainCount = 7;
 var treeCount = 20;
+var pCount = 0;
 
 var nextT = {};
 var nextM = {};
@@ -84,7 +90,7 @@ function setup() {
   nextM.z = bird.z - 60;
   nextM.i = 0;
 
-  nextC.z = bird.z - 100;
+  nextC.z = bird.z - 5;
   nextC.i = 0;
 
   setTrees(treeCont1, bird.x, bird.z-10);
@@ -97,7 +103,7 @@ function setup() {
   setMountains(mountainCont2, bird.x, bird.z-80);
   setMountains(mountainCont3, bird.x, bird.z-120);
 
-  setClouds(cloudCont1, bird.x, bird.z-10);
+  setClouds(cloudCont1, bird.x, bird.z-40);
   // initMountains(mountainContainer, bird);
   // initTrees(treeContainer,bird);
   // setPyramid1();
@@ -135,7 +141,7 @@ function movementCtrl(){
   if (distance > 0.5) {
     // let the user move!
     // console.log("go");
-    world.moveUserForward(0.1);
+    world.moveUserForward(0.5);
   }
   // world.moveUserForward(0.1);
 
@@ -144,20 +150,18 @@ function movementCtrl(){
   circle.setZ(bird.z);
   score = bird.z*-1;
   // scene change
-  if(score < 500){
-    forestScene(bird, false);
-  }else if(score >= 500){
+  if(score/500 > 2){
+    desertScene(bird);
+  }else if(score/500 >= 1){
     forestScene(bird, true);
+  }else if(score/500 < 1){
+    forestScene(bird, false);
   }
 
   // clouds generation
   if(bird.z < nextC.z) {
-    nextC.z = bird.z - 100;
-    setClouds(cloudsContainer[nextC.i], bird.x, bird.z-110);
-    nextC.i +=1;
-    if(nextC.i === 2){
-      nextC.i = 0;
-    }
+    nextC.z = bird.z - 1;
+    makeCloud(cloudCont1, bird.x, bird.z-50);
   }
 }
 
@@ -182,6 +186,17 @@ function OutFrontSensor() {
 }
 
 function forestScene(bird, autumn) {
+  if(autumn){
+    if(groundR < 254)
+      circle.setRed(++groundR);
+    if(groundG > 209 )
+      circle.setGreen(--groundG);
+    if(groundB > 140)
+      circle.setBlue(--groundB);
+  }
+  console.log(groundR)
+  console.log(groundG)
+  console.log(groundB)
   // trees generation
   if(bird.z < nextT.z){
     nextT.z = bird.z - 30;
@@ -202,12 +217,23 @@ function forestScene(bird, autumn) {
   }
 }
 
-function desertScene() {
+function desertScene(bird) {
+  if(groundR < 254)
+    circle.setRed(++groundR);
+  if(groundG < 217 )
+    circle.setGreen(++groundG);
+  if(groundB < 155)
+    circle.setBlue(++groundB);
+
+  if(pCount < 30){
+    setPyramid1(bird.x, bird.z);
+    setPyramid2(bird.x, bird.z);
+    pCount++;
+  }
 
 }
 
 function setTrees(container, xPos, zPos, autumn){
-  console.log("Updating trees");
   emptyContainer(container);
   for(let i=0;i<treeCount;i++){
     let x = random(xPos-50,xPos+50);
@@ -253,6 +279,40 @@ function setMountains(container, xPos, zPos, autumn){
   }
 }
 
+function makeCloud(container, xPos, zPos){
+  var cloudrand=cloudcolors[Math.floor(random(cloudcolors.length))];
+  var x = random(xPos-55,xPos+55);
+  var yPos = random(10,50);
+  var z = random(zPos-10, zPos-60);
+  cloud1=new Sphere({
+    x:x-2, y: yPos+random(-1,1), z:z,
+    radius:random(1,1.5),
+    red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
+  });
+  cloud2=new Sphere({
+    x:x, y: yPos, z:z,
+    radius:random(1.5,3.0),
+    red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
+  });
+  cloud3=new Sphere({
+    x:x+2, y: yPos+random(-1,1), z:z,
+    radius: random(1,1.5),
+    red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
+  });
+  container.addChild(cloud1);
+  container.addChild(cloud2);
+  container.addChild(cloud3);
+  
+  let children = container.getChildren();
+  let first = children[0];
+  let second = children[1];
+  let third = children[2];
+  container.removeChild(first);
+  container.removeChild(second);
+  container.removeChild(third);
+
+}
+
 function setClouds(container, xPos, zPos){
   emptyContainer(container);
   for(let i=0;i<cloudCount;i++){
@@ -262,17 +322,17 @@ function setClouds(container, xPos, zPos){
     var z = random(zPos-10, zPos-60);
     cloud1=new Sphere({
 			x:x-2, y: yPos+random(-1,1), z:z,
-			radius:1,
+			radius:random(1,1.5),
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		cloud2=new Sphere({
 			x:x, y: yPos, z:z,
-			radius:1.5,
+			radius:random(1.5,3.0),
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		cloud3=new Sphere({
 			x:x+2, y: yPos+random(-1,1), z:z,
-			radius: 1,
+			radius: random(1,1.5),
 			red:cloudrand[0] , green: cloudrand[1] , blue:cloudrand[2],
 		});
 		container.addChild(cloud1);
@@ -283,36 +343,36 @@ function setClouds(container, xPos, zPos){
 
 
 function setGround() {
-  circle = new Circle({x:0, y:0, z:0, radius:100, red:0, green:255, blue:0, rotationX:-90});
+  circle = new Circle({x:0, y:-1, z:0, radius:150, red:groundR, green:groundG, blue:groundB, rotationX:-90});
   world.add(circle);
 }
 
-function setPyramid1(){
+function setPyramid1(xPos, zPos){
   pyramid1= new OBJ({
     asset: 'pyramid1_obj',
     mtl: 'pyramid1_mtl',
-    x: 5,
+    x: random(xPos-50, xPos+50),
     y: 0,
-    z: 5,
+    z: random(zPos-10, zPos-50),
     scaleX:30, scaleY:30, scaleZ:30,
 
   });
 
   world.add(pyramid1);
 }
-  function setPyramid2(){
+  function setPyramid2(xPos, zPos){
     pyramid2 = new OBJ({
       asset: 'pyramid2_obj',
       mtl: 'pyramid2_mtl',
-      x: 5,
+      x: random(xPos-50, xPos+50),
       y: 0,
-      z: -10,
+      z: random(zPos-10, zPos-50),
       scaleX:0.03, scaleY:0.03, scaleZ:0.03,
 
     });
     world.add(pyramid2);
   }
-  function setDesertStone(){
+  function setDesertStone(xPos, zPos){
   desertstone = new OBJ({
     asset: 'desertstone_obj',
     mtl: 'desertstone_mtl',
