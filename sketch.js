@@ -37,6 +37,7 @@ var leavescolors_fall = [[254,186,2],[242,93,60],[205,209,0],[255,238,0],[255,11
 var mountcolors = [[134,186,139],[158,209,187],[201,228,202],[214,232,153],[247,240,148]];
 var mountcolors_fall = [[73,15,3],[219,44,12],[255,205,25],[247,98,23],[112,70,40]];
 var cloudcolors = [[255,255,255],[239,255,250],[229,236,244]];
+var pyramidcolors=[[248,188,130],[244,174,108],[224,172,130],[164,104,68]];
 
 var mountainCont1;
 var mountainCont2;
@@ -112,7 +113,6 @@ function setup() {
   // initMountains(mountainContainer, bird);
   // initTrees(treeContainer,bird);
   // setPyramid1();
-  // setPyramid2();
 
 
   // world.add(treeContainer);
@@ -313,7 +313,7 @@ function makeCloud(container, xPos, zPos){
   container.addChild(cloud1);
   container.addChild(cloud2);
   container.addChild(cloud3);
-  
+
   let children = container.getChildren();
   let first = children[0];
   let second = children[1];
@@ -359,30 +359,109 @@ function setGround() {
 }
 
 function setPyramid1(xPos, zPos){
-  pyramid1= new OBJ({
-    asset: 'pyramid1_obj',
-    mtl: 'pyramid1_mtl',
-    x: random(xPos-50, xPos+50),
+  let xPos=random(xPos-50,xPos+50);
+  let zPos=random(zPos-10,zPos-50);
+  var pyramidrand=pyramidcolors[Math.floor(random(pyramidcolors.length))];
+  pyramidbox1 = new Box({
+    x: xPos,
     y: 0,
-    z: random(zPos-10, zPos-50),
-    scaleX:30, scaleY:30, scaleZ:30,
-
+    z: zPos,
+    width:20 , height: 6 , depth:20,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+   pyramidbox2 = new Box({
+     x: xPos,
+     y: 6,
+     z: zPos,
+    width:15 , height: 6 , depth:15,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidbox3 = new Box({
+    x: xPos,
+    y: 12,
+    z: zPos,
+    width:10 , height: 6 , depth:10,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidbox4 = new Box({
+    x: xPos,
+    y: 18,
+    z: zPos,
+    width:5 , height: 6 , depth:5,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidcone = new Cone({
+    x: xPos,
+    y: 24,
+    z: zPos,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+    height:6,
+    radiusBottom:2.5, radiusTop:0.1,
   });
 
-  world.add(pyramid1);
+  world.add(pyramidbox1);
+  world.add(pyramidbox2);
+  world.add(pyramidbox3);
+  world.add(pyramidbox4);
+  world.add(pyramidcone);
 }
-  function setPyramid2(xPos, zPos){
-    pyramid2 = new OBJ({
-      asset: 'pyramid2_obj',
-      mtl: 'pyramid2_mtl',
-      x: random(xPos-50, xPos+50),
-      y: 0,
-      z: random(zPos-10, zPos-50),
-      scaleX:0.03, scaleY:0.03, scaleZ:0.03,
 
-    });
-    world.add(pyramid2);
-  }
+function setPyramid2(){
+  let xPos=random(xPos-50,xPos+50);
+  let zPos=random(zPos-10,zPos-50);
+  var pyramidrand=pyramidcolors[Math.floor(random(pyramidcolors.length))];
+  var pyramidbox1 = new Box({
+    x: xPos,
+    y: 0,
+    z: zPos,
+    width:20 , height: 4 , depth:20,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+   var pyramidbox2 = new Box({
+     x: xPos,
+     y: 4,
+     z: zPos,
+    width:17 , height: 4 , depth:17,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  var pyramidbox3 = new Box({
+    x: xPos,
+    y: 8,
+    z: zPos,
+    width:14 , height: 4 , depth:14,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+	var pyramidbox4 = new Box({
+    x: xPos,
+    y: 12,
+    z: 1,
+    width:11 , height: 4 , depth:11,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+	var pyramidbox5 = new Box({
+    x: xPos,
+    y: 16,
+    z: zPos,
+    width:8 , height: 4 , depth:8,
+    rred:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+	var pyramidbox6 = new Box({
+    x: xPos,
+    y: 20,
+    z: zPos,
+    width:5 , height: 4 , depth:5,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+
+
+  world.add(pyramidbox1);
+  world.add(pyramidbox2);
+  world.add(pyramidbox3);
+  world.add(pyramidbox4);
+	world.add(pyramidbox5);
+	world.add(pyramidbox6);
+}
+
   function setDesertStone(xPos, zPos){
   desertstone = new OBJ({
     asset: 'desertstone_obj',
