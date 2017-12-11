@@ -3,6 +3,7 @@ var sphere;
 var plane;
 var circle;
 
+var sky;
 var bird;
 var sensor;
 var cone;
@@ -46,13 +47,17 @@ var cloudsContainer;
 
 var changeScene = 0;
 
-// questions to ask: how to remove from world?
-// how to smartly do collision for each object
-// how to move in y axis
+// questions to ask:
+// how to display score in a fixed place?
+// color distortion
+// how to change color for the gradien sky entity
+
 
 // TODO: progressivly generate scene ahead of the user by 100/150 point and splice the ones behind
 // TODO: prevent the user from go too low or too high
 // TODO: transparent clounds
+
+
 
 function setup() {
   // no canvas needed
@@ -125,6 +130,7 @@ function setup() {
   world.add(mountainCont3);
   //adding 3d model for cloud1
 
+  sky = document.getElementById("sky");
 }
 
 function draw() {
@@ -132,6 +138,7 @@ function draw() {
 }
 
 function movementCtrl(){
+  handleSky()
   bird = world.getUserPosition();
   // see what's in front of the user
   var distance = sensor.getDistanceToNearestObjectInFrontOfUser();
@@ -141,7 +148,7 @@ function movementCtrl(){
   if (distance > 0.5) {
     // let the user move!
     // console.log("go");
-    world.moveUserForward(0.5);
+    world.moveUserForward(0.6);
   }
   // world.moveUserForward(0.1);
 
@@ -194,9 +201,6 @@ function forestScene(bird, autumn) {
     if(groundB > 140)
       circle.setBlue(--groundB);
   }
-  console.log(groundR)
-  console.log(groundG)
-  console.log(groundB)
   // trees generation
   if(bird.z < nextT.z){
     nextT.z = bird.z - 30;
@@ -230,6 +234,12 @@ function desertScene(bird) {
     setPyramid2(bird.x, bird.z);
     pCount++;
   }
+}
+
+function handleSky() {
+  let topColors = sky.componets.material.attrValue.topColor
+  let bottomColors = sky.componets.material.attrValue.bottomColor
+
 
 }
 
@@ -266,7 +276,7 @@ function setMountains(container, xPos, zPos, autumn){
   emptyContainer(container);
   for(let i=0;i<moutainCount;i++){
     var mountrand = autumn ? mountcolors_fall[Math.floor(random(5))] : mountcolors[Math.floor(random(5))];
-    var x = random(xPos-55,xPos+55);
+    var x = random(xPos-100,xPos+100);
     var z = random(zPos-10, zPos-50);
     var height = random(30, 100);
     newCone = new Cone({
@@ -284,6 +294,7 @@ function makeCloud(container, xPos, zPos){
   var x = random(xPos-55,xPos+55);
   var yPos = random(10,50);
   var z = random(zPos-10, zPos-60);
+  // console.log(cloudrand);
   cloud1=new Sphere({
     x:x-2, y: yPos+random(-1,1), z:z,
     radius:random(1,1.5),
