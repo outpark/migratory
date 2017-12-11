@@ -4,15 +4,16 @@ var plane;
 var circle;
 
 var sky;
+var scoreBoard;
 var bird;
 var sensor;
 var cone;
 
 var score = 0;
 
-var groundR = 150;
-var groundG = 255;
-var groundB = 207;
+var groundR = 138;
+var groundG = 203;
+var groundB = 136;
 
 var cloudCount = 40;
 var moutainCount = 7;
@@ -131,6 +132,7 @@ function setup() {
   //adding 3d model for cloud1
 
   sky = document.getElementById("sky");
+  scoreBoard = document.getElementById("score-board");
 }
 
 function draw() {
@@ -138,8 +140,9 @@ function draw() {
 }
 
 function movementCtrl(){
-  handleSky()
   bird = world.getUserPosition();
+  handleSky()
+  
   // see what's in front of the user
   var distance = sensor.getDistanceToNearestObjectInFrontOfUser();
   // console.log(distance);
@@ -157,6 +160,7 @@ function movementCtrl(){
   circle.setZ(bird.z);
   score = bird.z*-1;
   // scene change
+
   if(score/500 > 2){
     desertScene(bird);
   }else if(score/500 >= 1){
@@ -170,6 +174,7 @@ function movementCtrl(){
     nextC.z = bird.z - 1;
     makeCloud(cloudCont1, bird.x, bird.z-50);
   }
+  handleBoard(bird);
 }
 
 function OutFrontSensor() {
@@ -230,17 +235,21 @@ function desertScene(bird) {
     circle.setBlue(++groundB);
 
   if(pCount < 30){
-    setPyramid1(bird.x, bird.z);
-    setPyramid2(bird.x, bird.z);
+    // setPyramid1(bird.x, bird.z);
+    // setPyramid2(bird.x, bird.z);
     pCount++;
   }
 }
 
 function handleSky() {
-  let topColors = sky.componets.material.attrValue.topColor
-  let bottomColors = sky.componets.material.attrValue.bottomColor
+  let topColors = sky.components.material.attrValue.topColor
+  let bottomColors = sky.components.material.attrValue.bottomColor
+}
 
-
+function handleBoard(bird) {
+  let result = `${bird.x - 30} ${40} ${bird.z - 40}`;
+  scoreBoard.setAttribute("position", result);
+  scoreBoard.setAttribute("value", Math.floor(score).toString()+" m");
 }
 
 function setTrees(container, xPos, zPos, autumn){
