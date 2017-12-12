@@ -151,7 +151,7 @@ function draw() {
 function movementCtrl(){
   bird = world.getUserPosition();
   handleSky()
-  
+
   // see what's in front of the user
   var distance = sensor.getDistanceToNearestObjectInFrontOfUser();
   // console.log(distance);
@@ -251,12 +251,12 @@ function desertScene(bird) {
     setPyramid1(pyramidCont1, bird.x, bird.z);
     nextP.a = bird.z - 20;
   }
-  
+
   if(bird.z <= nextP.b){
     setPyramid2(pyramidCont2, bird.x, bird.z);
     nextP.b = bird.z - 30;
   }
-  
+
 }
 
 function handleSky() {
@@ -371,14 +371,14 @@ function makeCloud(container, xPos, zPos){
   container.addChild(cloud1);
   container.addChild(cloud2);
   container.addChild(cloud3);
-  
+
   let children = container.getChildren();
   if(children.length > 200){
     container.removeChild(children[0]);
     container.removeChild(children[1]);
     container.removeChild(children[2]);
   }
-  
+
 
 }
 
@@ -451,7 +451,7 @@ function setPyramid1(container, xPos, zPos){
   });
   pyramidcone = new Cone({
     x: x,
-    y: h1*4+h1,
+    y: h1*4,
     z: z,
     red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
     height:h1,
@@ -513,7 +513,7 @@ function setPyramid2(container, xPos, zPos){
     y: h1*4,
     z: z,
     width:8 , height: h1, depth:8,
-    rred:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
   });
   var pyramidbox6 = new Box({
     x: x,
@@ -547,4 +547,3 @@ function emptyContainer(container){
     container.removeChild(entity);
   });
 }
-
