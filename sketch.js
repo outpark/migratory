@@ -451,7 +451,7 @@ function setPyramid1(container, xPos, zPos){
   });
   pyramidcone = new Cone({
     x: x,
-    y: h1*4,
+    y: h1*4+h1,
     z: z,
     red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
     height:h1,
@@ -513,7 +513,7 @@ function setPyramid2(container, xPos, zPos){
     y: h1*4,
     z: z,
     width:8 , height: h1, depth:8,
-    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+    rred:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
   });
   var pyramidbox6 = new Box({
     x: x,
