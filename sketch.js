@@ -3,6 +3,7 @@ var sphere;
 var plane;
 var circle;
 
+var main_bgm;
 var sky;
 var scoreBoard;
 var bird;
@@ -23,6 +24,7 @@ var pCount = 0;
 var nextT = {};
 var nextM = {};
 var nextC = {};
+var nextP = {};
 
 var treeContainer;
 var treeCont1;
@@ -38,6 +40,7 @@ var leavescolors_fall = [[254,186,2],[242,93,60],[205,209,0],[255,238,0],[255,11
 var mountcolors = [[134,186,139],[158,209,187],[201,228,202],[214,232,153],[247,240,148]];
 var mountcolors_fall = [[73,15,3],[219,44,12],[255,205,25],[247,98,23],[112,70,40]];
 var cloudcolors = [[255,255,255],[239,255,250],[229,236,244]];
+var pyramidcolors=[[248,188,130],[244,174,108],[224,172,130],[164,104,68]];
 
 var mountainCont1;
 var mountainCont2;
@@ -45,6 +48,9 @@ var mountainCont3;
 var mountainsContainer;
 
 var cloudsContainer;
+
+var pyramidCont1;
+var pyramidCont2;
 
 var changeScene = 0;
 
@@ -58,12 +64,14 @@ var changeScene = 0;
 // TODO: prevent the user from go too low or too high
 // TODO: transparent clounds
 
-
+function preload() {
+  main_bgm = loadSound('./libraries/snowy.mp3');
+}
 
 function setup() {
   // no canvas needed
   noCanvas();
-
+  main_bgm.loop();
   world = new World('VRScene');
   world.setUserPosition(0, 5, 10);
   world.setFlying(true);
@@ -87,6 +95,9 @@ function setup() {
   treeCont5 = new Container3D({x:0,y:0,z:0});
   treesContainer = [treeCont1,treeCont2,treeCont3,treeCont4,treeCont5];
 
+  pyramidCont1 = new Container3D({x:0,y:0,z:0});
+  pyramidCont2 = new Container3D({x:0,y:0,z:0});
+
   setGround();
 
   bird = world.getUserPosition();
@@ -99,6 +110,9 @@ function setup() {
   nextC.z = bird.z - 5;
   nextC.i = 0;
 
+  nextP.a = -950;
+  nextP.b = -980;
+
   setTrees(treeCont1, bird.x, bird.z-10);
   setTrees(treeCont2, bird.x, bird.z-30);
   setTrees(treeCont3, bird.x, bird.z-50);
@@ -110,14 +124,7 @@ function setup() {
   setMountains(mountainCont3, bird.x, bird.z-120);
 
   setClouds(cloudCont1, bird.x, bird.z-40);
-  // initMountains(mountainContainer, bird);
-  // initTrees(treeContainer,bird);
-  // setPyramid1();
-  // setPyramid2();
 
-
-  // world.add(treeContainer);
-  // world.add(mountainContainer);
   world.add(cloudCont1);
   world.add(cloudCont2);
   world.add(treeCont1);
@@ -129,7 +136,9 @@ function setup() {
   world.add(mountainCont1);
   world.add(mountainCont2);
   world.add(mountainCont3);
-  //adding 3d model for cloud1
+
+  world.add(pyramidCont1);
+  world.add(pyramidCont2);
 
   sky = document.getElementById("sky");
   scoreBoard = document.getElementById("score-board");
@@ -151,7 +160,8 @@ function movementCtrl(){
   if (distance > 0.5) {
     // let the user move!
     // console.log("go");
-    world.moveUserForward(0.6);
+    if(bird.y >= 0)
+      world.moveUserForward(0.9);
   }
   // world.moveUserForward(0.1);
 
@@ -160,8 +170,9 @@ function movementCtrl(){
   circle.setZ(bird.z);
   score = bird.z*-1;
   // scene change
-
-  if(score/500 > 2){
+  if(score/480 >= 4){
+    forestScene(bird, false);
+  }else if(score/480 >= 2){
     desertScene(bird);
   }else if(score/500 >= 1){
     forestScene(bird, true);
@@ -208,12 +219,14 @@ function forestScene(bird, autumn) {
   }
   // trees generation
   if(bird.z < nextT.z){
-    nextT.z = bird.z - 30;
-    setTrees(treesContainer[nextT.i], bird.x, bird.z-110, autumn);
-    nextT.i +=1;
-    if(nextT.i === 5){
-      nextT.i = 0;
-    }
+    nextT.z = bird.z - 0.5;
+    makeTree(treeCont1, bird.x, bird.z, autumn);
+    // nextT.z = bird.z - 30;
+    // setTrees(treesContainer[nextT.i], bird.x, bird.z-110, autumn);
+    // nextT.i +=1;
+    // if(nextT.i === 5){
+    //   nextT.i = 0;
+    // }
   }
   // mountains generation
   if(bird.z < nextM.z){
@@ -234,11 +247,16 @@ function desertScene(bird) {
   if(groundB < 155)
     circle.setBlue(++groundB);
 
-  if(pCount < 30){
-    // setPyramid1(bird.x, bird.z);
-    // setPyramid2(bird.x, bird.z);
-    pCount++;
+  if(bird.z <= nextP.a){
+    setPyramid1(pyramidCont1, bird.x, bird.z);
+    nextP.a = bird.z - 20;
   }
+  
+  if(bird.z <= nextP.b){
+    setPyramid2(pyramidCont2, bird.x, bird.z);
+    nextP.b = bird.z - 30;
+  }
+  
 }
 
 function handleSky() {
@@ -250,6 +268,37 @@ function handleBoard(bird) {
   let result = `${bird.x - 30} ${40} ${bird.z - 40}`;
   scoreBoard.setAttribute("position", result);
   scoreBoard.setAttribute("value", Math.floor(score).toString()+" m");
+}
+
+function makeTree(container, xPos, zPos, autumn){
+  let x = random(xPos-70,xPos+70);
+  let height1 = random(5, 8);
+  let height2 = random(5, 14);
+  let z = random(zPos-100, zPos-120);
+  var leavesrand = autumn ? leavescolors_fall[Math.floor(random(0,5))] : leavescolors[Math.floor(random(0,5))];
+  var trunk = new Cylinder({
+    x:x, y:1 , z:z,
+    height:height1,
+    radius: 0.25,
+    red: 83, green: 53, blue:10,
+  });
+  let leaves =[new Cone({
+    x:x, y:height1, z:z,
+    height:height2,
+    radiusBottom:2, radiusTop:0.01,
+    red:leavesrand[0], green:leavesrand[1], blue: leavesrand[2]
+  }), new Box({
+    x:x, y:height1, z:z,
+    width:random(2,4) , height: height2 , depth:random(2,4),
+    red:leavesrand[0], green:leavesrand[1], blue: leavesrand[2]
+  })]
+  container.addChild(trunk);
+  container.addChild(leaves[Math.floor(random(2))]);
+  let children = container.getChildren();
+  if(children.length > 210){
+    container.removeChild(children[0]);
+    container.removeChild(children[1]);
+  }
 }
 
 function setTrees(container, xPos, zPos, autumn){
@@ -324,12 +373,12 @@ function makeCloud(container, xPos, zPos){
   container.addChild(cloud3);
   
   let children = container.getChildren();
-  let first = children[0];
-  let second = children[1];
-  let third = children[2];
-  container.removeChild(first);
-  container.removeChild(second);
-  container.removeChild(third);
+  if(children.length > 200){
+    container.removeChild(children[0]);
+    container.removeChild(children[1]);
+    container.removeChild(children[2]);
+  }
+  
 
 }
 
@@ -367,44 +416,129 @@ function setGround() {
   world.add(circle);
 }
 
-function setPyramid1(xPos, zPos){
-  pyramid1= new OBJ({
-    asset: 'pyramid1_obj',
-    mtl: 'pyramid1_mtl',
-    x: random(xPos-50, xPos+50),
+function setPyramid1(container, xPos, zPos){
+  let x = random(xPos-100,xPos+100);
+  let z = random(zPos-50,zPos-150);
+  let h1 = random(5, 20);
+  var pyramidrand=pyramidcolors[Math.floor(random(pyramidcolors.length))];
+  pyramidbox1 = new Box({
+    x: x,
     y: 0,
-    z: random(zPos-10, zPos-50),
-    scaleX:30, scaleY:30, scaleZ:30,
-
+    z: z,
+    width:20+h1 , height: h1 , depth:20,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+   pyramidbox2 = new Box({
+     x: x,
+     y: h1,
+     z: z,
+    width:15+h1 , height: h1 , depth:15,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidbox3 = new Box({
+    x: x,
+    y: h1*2,
+    z: z,
+    width:10+h1 , height: h1 , depth:10,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidbox4 = new Box({
+    x: x,
+    y: h1*3,
+    z: z,
+    width:5+h1 , height: h1 , depth:5,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  pyramidcone = new Cone({
+    x: x,
+    y: h1*4+h1,
+    z: z,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+    height:h1,
+    radiusBottom:2.5, radiusTop:0.1,
   });
 
-  world.add(pyramid1);
-}
-  function setPyramid2(xPos, zPos){
-    pyramid2 = new OBJ({
-      asset: 'pyramid2_obj',
-      mtl: 'pyramid2_mtl',
-      x: random(xPos-50, xPos+50),
-      y: 0,
-      z: random(zPos-10, zPos-50),
-      scaleX:0.03, scaleY:0.03, scaleZ:0.03,
+  container.addChild(pyramidbox1);
+  container.addChild(pyramidbox2);
+  container.addChild(pyramidbox3);
+  container.addChild(pyramidbox4);
+  container.addChild(pyramidcone);
 
-    });
-    world.add(pyramid2);
+
+  let children = container.getChildren();
+  if(children.length > 100){
+    container.removeChild(children[0]);
+    container.removeChild(children[1]);
+    container.removeChild(children[2]);
+    container.removeChild(children[3]);
+    container.removeChild(children[4]);
   }
-  function setDesertStone(xPos, zPos){
-  desertstone = new OBJ({
-    asset: 'desertstone_obj',
-    mtl: 'desertstone_mtl',
-    x: 3,
-    y: 0,
-    z: -10,
-    scaleX:1, scaleY:1, scaleZ:1,
-    rotationX:0,
-    rotationY:0
-  });
-  world.add(desertstone);
+}
 
+function setPyramid2(container, xPos, zPos){
+  let x = random(xPos-100,xPos+100);
+  let z = random(zPos-50,zPos-150);
+  let h1 = random(3, 15);
+  var pyramidrand=pyramidcolors[Math.floor(random(pyramidcolors.length))];
+  var pyramidbox1 = new Box({
+    x: x,
+    y: 0,
+    z: z,
+    width:20 , height: h1, depth:20,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+   var pyramidbox2 = new Box({
+     x: x,
+     y: h1,
+     z: z,
+    width:17 , height: h1, depth:17,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  var pyramidbox3 = new Box({
+    x: x,
+    y: h1*2,
+    z: z,
+    width:14 , height: h1, depth:14,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  var pyramidbox4 = new Box({
+    x: x,
+    y: h1*3,
+    z: z,
+    width:11 , height: h1, depth:11,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  var pyramidbox5 = new Box({
+    x: x,
+    y: h1*4,
+    z: z,
+    width:8 , height: h1, depth:8,
+    rred:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+  var pyramidbox6 = new Box({
+    x: x,
+    y: h1*5,
+    z: z,
+    width:5 , height: h1, depth:5,
+    red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+  });
+
+  container.addChild(pyramidbox1);
+  container.addChild(pyramidbox2);
+  container.addChild(pyramidbox3);
+  container.addChild(pyramidbox4);
+  container.addChild(pyramidbox5);
+  container.addChild(pyramidbox6);
+
+  let children = container.getChildren();
+  if(children.length > 120){
+    container.removeChild(children[0]);
+    container.removeChild(children[1]);
+    container.removeChild(children[2]);
+    container.removeChild(children[3]);
+    container.removeChild(children[4]);
+    container.removeChild(children[5]);
+  }
 }
 
 function emptyContainer(container){
@@ -414,118 +548,3 @@ function emptyContainer(container){
   });
 }
 
-
-
-
-// legacy
-function initMountains(container, bird) {
-  for(let i=0;i<moutainCount;i++){
-    var r= random(255);
-    var g= random(255);
-    var b = random(255);
-    var xPos = random(-40,40);
-    var zPos = random(bird.z-20, bird.z-80);
-    var height = random(30, 80);
-    newCone = new Cone({
-      x:xPos, y:30, z:zPos,
-      red:r, green:g, blue:b,
-      height:height,
-      radiusBottom:random(15,30), radiusTop:0.1,
-    });
-    // world.add(newCone);
-    container.addChild(newCone);
-  }
-}
-function initTrees(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Cone({
-      x:xPos, y:5, z:zPos,
-      height:height,
-      radiusBottom:1, radiusTop:0.01,
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
-
-function initTrees2(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Box({
-      x:xPos, y:5, z:zPos,
-      width:random(3,5) , height: random(3,5) , depth:random(3,5),
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
-
-function initTrees(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Cone({
-      x:xPos, y:5, z:zPos,
-      height:height,
-      radiusBottom:1, radiusTop:0.01,
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
-
-function initTrees2(container, bird) {
-  for(let i=0;i<treeCount;i++){
-    let xPos = random(-30,30);
-    let zPos = random(bird.z, bird.z-60)
-    let height = random(5, 10);
-    var trunk = new Cylinder({
-    x:xPos, y:1 , z:zPos,
-    height:height,
-    radius: 0.25,
-    red: 83, green: 53, blue:10,
-    });
-    // world.add(trunk);
-    var leaves = new Box({
-      x:xPos, y:5, z:zPos,
-      width:random(3,5) , height: random(3,5) , depth:random(3,5),
-      red:30, green:147, blue: 45
-    });
-    // world.add(leaves);
-    container.addChild(trunk);
-    container.addChild(leaves);
-  }
-}
