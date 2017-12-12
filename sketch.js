@@ -161,7 +161,7 @@ function movementCtrl(){
     // let the user move!
     // console.log("go");
     if(bird.y >= 0)
-      world.moveUserForward(0.9);
+      world.moveUserForward(0.5);
   }
   // world.moveUserForward(0.1);
 
