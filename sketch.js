@@ -41,6 +41,7 @@ var mountcolors = [[134,186,139],[158,209,187],[201,228,202],[214,232,153],[247,
 var mountcolors_fall = [[73,15,3],[219,44,12],[255,205,25],[247,98,23],[112,70,40]];
 var cloudcolors = [[255,255,255],[239,255,250],[229,236,244]];
 var pyramidcolors=[[248,188,130],[244,174,108],[224,172,130],[164,104,68]];
+var skycolors = [[252, 249, 242],[254, 97, 81],[79, 184, 255],[255, 226, 103]];
 
 var mountainCont1;
 var mountainCont2;
@@ -161,7 +162,7 @@ function movementCtrl(){
     // let the user move!
     // console.log("go");
     if(bird.y >= 0)
-      world.moveUserForward(0.5);
+      world.moveUserForward(0.9);
   }
   // world.moveUserForward(0.1);
 
@@ -260,8 +261,32 @@ function desertScene(bird) {
 }
 
 function handleSky() {
-  let topColors = sky.components.material.attrValue.topColor
-  let bottomColors = sky.components.material.attrValue.bottomColor
+  if(score/800 >= 1){
+    let top = skycolors[2];
+    let bottom = skycolors[0];
+    if(top[0] < skycolors[1][0]){
+      top[0] += 1;
+    }
+    if(top[1] > skycolors[1][1]){
+      top[1] -= 1;
+    }
+    if(top[2] > skycolors[1][2]){
+      top[2] -= 1;
+    }
+    if(bottom[0] < skycolors[3][0]){
+      bottom[0] += 1;
+    }
+    if(bottom[1] > skycolors[3][1]){
+      bottom[1] -= 1;
+    }
+    if(bottom[2] > skycolors[3][2]){
+      bottom[2] -= 1;
+    }
+    let str1 = `${top[0]} ${top[1]} ${top[2]}`
+    let str2 = `${bottom[0]} ${bottom[1]} ${bottom[2]}`;
+    let base = `shader: gradient; topColor: ${str1}; bottomColor: ${str2}`;
+    sky.setAttribute('material',base);
+  }
 }
 
 function handleBoard(bird) {
@@ -451,7 +476,7 @@ function setPyramid1(container, xPos, zPos){
   });
   pyramidcone = new Cone({
     x: x,
-    y: h1*4+h1,
+    y: h1*4+h1*0.6,
     z: z,
     red:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
     height:h1,
@@ -513,7 +538,7 @@ function setPyramid2(container, xPos, zPos){
     y: h1*4,
     z: z,
     width:8 , height: h1, depth:8,
-    rred:pyramidrand[0] , green: pyramidrand[1] , blue:pyramidrand[2],
+    green: pyramidrand[1] , blue:pyramidrand[2],
   });
   var pyramidbox6 = new Box({
     x: x,
