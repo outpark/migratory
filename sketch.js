@@ -161,8 +161,10 @@ function movementCtrl(){
   if (distance > 0.5) {
     // let the user move!
     // console.log("go");
-    if(bird.y >= 0)
-      world.moveUserForward(0.9);
+    if(bird.y > 1)
+      world.moveUserForward(0.6);
+    else
+      world.moveUserForward(0.3);
   }
   // world.moveUserForward(0.1);
 
@@ -238,6 +240,15 @@ function forestScene(bird, autumn) {
       nextM.i = 0;
     }
   }
+
+  if(score>700 && treeCont2.getChildren().length>0)
+    emptyContainer(treeCont2)
+  if(score>750 && treeCont3.getChildren().length>0)
+    emptyContainer(treeCont3)
+  if(score>850 && treeCont4.getChildren().length>0)
+    emptyContainer(treeCont4)
+  if(score>900 && treeCont5.getChildren().length>0)
+    emptyContainer(treeCont5)
 }
 
 function desertScene(bird) {
@@ -299,7 +310,7 @@ function makeTree(container, xPos, zPos, autumn){
   let x = random(xPos-70,xPos+70);
   let height1 = random(5, 8);
   let height2 = random(5, 14);
-  let z = random(zPos-100, zPos-120);
+  let z = random(zPos-90, zPos-120);
   var leavesrand = autumn ? leavescolors_fall[Math.floor(random(0,5))] : leavescolors[Math.floor(random(0,5))];
   var trunk = new Cylinder({
     x:x, y:1 , z:z,
@@ -320,7 +331,7 @@ function makeTree(container, xPos, zPos, autumn){
   container.addChild(trunk);
   container.addChild(leaves[Math.floor(random(2))]);
   let children = container.getChildren();
-  if(children.length > 210){
+  if(children.length > 300){
     container.removeChild(children[0]);
     container.removeChild(children[1]);
   }
